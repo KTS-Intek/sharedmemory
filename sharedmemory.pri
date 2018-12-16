@@ -1,10 +1,3 @@
-QT       += core
-
-linux-beagleboard-g++:{
-   QT -= gui
-}
-
-
 INCLUDEPATH  += $$PWD\
                 $$PWD/../../defines/defines
 
