@@ -419,6 +419,8 @@ QString SharedMemoHelper::defFireflyCounterSemaName()
 }
 
 
+
+
 QString SharedMemoHelper::defVpnManagerMemoName()       { return QString("%1/vpnmanager").arg(defSharedMemoName())      ; }
 
 QString SharedMemoHelper::defVpnManagerSemaName()       { return QString("%1/vpnmanager").arg(defSemaName())            ; }

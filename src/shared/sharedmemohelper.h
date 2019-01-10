@@ -141,6 +141,8 @@ public:
 
     static QString defFireflyCounterSemaName();
 
+
+
     //vpn
 
     static QString defVpnManagerMemoName();
