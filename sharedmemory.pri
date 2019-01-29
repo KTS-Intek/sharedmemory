@@ -1,4 +1,8 @@
-#Dependencies - nothing
+# Version=0.0.1
+#
+# Dependencies
+# sharedmemory
+#
 
 INCLUDEPATH  += $$PWD\
                 $$PWD/../../defines/defines
