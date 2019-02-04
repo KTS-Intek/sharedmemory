@@ -15,15 +15,24 @@ public:
 
     QVariantHash getLastSavedObj() const;
 
+//    QByteArray getLastSavedObjArr() const;
+
+
+    bool getMirrorMode() const;
+
 signals:
     void onRestoredMemo(QVariantHash h);
 
 
+    void ready2flushArr();
 
 
 public slots:
+    void setMirrorMode(const bool &isArray);
 
     virtual void initStarted();
+
+    void setSharedMemArrData();
 
     void setSharedMemData(QVariantHash h);
 
@@ -52,8 +61,11 @@ public slots:
     void flushNow2file();
 
 
+    void flushNowArr(QByteArray arr);
+
 
 private:
+    bool isArrayMode;
 
 //    bool isConnectionReady;
 

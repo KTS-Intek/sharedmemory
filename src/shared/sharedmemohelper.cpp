@@ -392,9 +392,9 @@ QString SharedMemoHelper::defFireflyStatusMemoName()    { return QString("%1/fir
 QString SharedMemoHelper::defFireflyStatusSemaName()    { return QString("%1/fireflyStatus").arg(defSemaName())         ; }
 
 
-QString SharedMemoHelper::defFireflyTempScheduleMemoName(){return QString("%1/fireflyTempSchedule").arg(defSharedMemoName()); }
+QString SharedMemoHelper::defFireflyTempScheduleMemoName(){return QString("%1/fireflyTempSchedule").arg(defSharedMemoName()); }//deprecated
 
-QString SharedMemoHelper::defFireflyTempScheduleSemaName(){return QString("%1/fireflyTempSchedule").arg(defSemaName())      ; }
+QString SharedMemoHelper::defFireflyTempScheduleSemaName(){return QString("%1/fireflyTempSchedule").arg(defSemaName())      ; }//deprecated
 
 QString SharedMemoHelper::defFireflyTaskTableMemoName()
 {

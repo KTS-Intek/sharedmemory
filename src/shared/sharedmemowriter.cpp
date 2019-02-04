@@ -5,13 +5,28 @@
 SharedMemoWriter::SharedMemoWriter(const QString &sharedMemoName, const QString &semaName, const QString &write2fileName, const int &delay, const int &delay2fileMsec, const bool &verboseMode, QObject *parent) :
     SharedMemoWriteLater(sharedMemoName, semaName, write2fileName, delay, delay2fileMsec, verboseMode, parent)
 {
-
+    setMirrorMode(false);
 //    isConnectionReady = false;
 }
 
 QVariantHash SharedMemoWriter::getLastSavedObj() const
 {
     return hashMirror;
+}
+
+//QByteArray SharedMemoWriter::getLastSavedObjArr() const
+//{
+//    return arrMirror;
+//}
+
+bool SharedMemoWriter::getMirrorMode() const
+{
+    return isArrayMode;
+}
+
+void SharedMemoWriter::setMirrorMode(const bool &isArray)
+{
+    isArrayMode = isArray;
 }
 
 void SharedMemoWriter::initStarted()
@@ -21,12 +36,21 @@ void SharedMemoWriter::initStarted()
     connect(this, &SharedMemoWriter::onFlushNow2file, this, &SharedMemoWriter::flushNow2file);
 }
 
+void SharedMemoWriter::setSharedMemArrData()//only for counter, you must wait for ready2flushArr()
+{
+    if(!isArrayMode)
+        return;
+    checkCanFlushNow();
+}
+
 
 
 
 
 void SharedMemoWriter::setSharedMemData(QVariantHash h)
 {    
+    if(isArrayMode)
+        return;
     hashMirror = h;
     checkCanFlushNow();
 }
@@ -37,6 +61,8 @@ void SharedMemoWriter::setSharedMemData(QString key, QVariant data)
 {
 //    if(verboseMode)
 //        qDebug() << "setSharedMemData " << key << data;
+    if(isArrayMode)
+        return;
     hashMirror.insert(key, data);
     checkCanFlushNow();
 }
@@ -45,6 +71,8 @@ void SharedMemoWriter::setSharedMemData(QString key, QVariant data)
 
 void SharedMemoWriter::appendShmemData(QVariantHash h)
 {
+    if(isArrayMode)
+        return;
     const QList<QString> lk = h.keys();
     const int iMax = lk.size();
     for(int i = 0; i < iMax; i++)
@@ -59,6 +87,8 @@ void SharedMemoWriter::appendShmemData(QVariantHash h)
 
 void SharedMemoWriter::appendShmemData(QStringList keys, QVariantList datal)
 {
+    if(isArrayMode)
+        return;
     const int iMax0 = keys.size();
     const int iMax1 = datal.size();
 
@@ -74,6 +104,8 @@ void SharedMemoWriter::appendShmemData(QStringList keys, QVariantList datal)
 
 void SharedMemoWriter::appendLogData(QString key, QStringList log, QString splitter, int maxLogSize)
 {
+    if(isArrayMode)
+        return;
     QStringList l = hashMirror.value(key).toString().split(splitter, QString::SkipEmptyParts);
     l.append(log);
     const int r = l.size();
@@ -89,12 +121,16 @@ void SharedMemoWriter::appendLogData(QString key, QString line, QString splitter
 
 void SharedMemoWriter::removeTheseKeys(QStringList keys2del)
 {
+    if(isArrayMode)
+        return;
     for(int i = 0, imax = keys2del.size(); i < imax; i++)
         hashMirror.remove(keys2del.at(i));
 }
 
 void SharedMemoWriter::checkRemoveKeys(QStringList ldonotdel)
 {
+    if(isArrayMode)
+        return;
     const QList<QString> lk = hashMirror.keys();
     QStringList keys2del;
     for(int i = 0, imax = lk.size(); i < imax; i++){
@@ -142,9 +178,15 @@ void SharedMemoWriter::flushNow()
 {
     if(!checkResetCounter())
         return;//noting to update
+
+    if(isArrayMode){
+        emit ready2flushArr();//кажу щоб мені переслали дані
+        return;
+    }
+
     const bool r = SharedMemoHelper::write2sharedMemory(hashMirror, shmem, lastmemosett.semaName, verboseMode);
     if(verboseMode)
-        qDebug() << "SharedMemoWriter::flushNow " << lastmemosett.sharedMemoName << r << hashMirror.keys();
+        qDebug() << "SharedMemoWriter::flushNow " << lastmemosett.sharedMemoName << r <<  hashMirror.keys();
     //const QVariantHash &h, QSharedMemory &shmem, const QString &semaKey, const bool verboseMode)
 
 }
@@ -153,6 +195,9 @@ void SharedMemoWriter::flushNow()
 
 void SharedMemoWriter::flushNow2file()
 {
+    if(isArrayMode)
+        return;
+
     if(!checkResetCounter2file())
         return;
 
@@ -160,6 +205,18 @@ void SharedMemoWriter::flushNow2file()
     const bool b = SharedMemoHelper::saveSharedMemory2file(hashMirror, lastmemosett.write2fileName, err);
     if(!b || verboseMode)
         qDebug() << "SharedMemoWriter save 2 file " << b << err << lastmemosett.write2fileName << hashMirror.keys() ;
+
+}
+
+void SharedMemoWriter::flushNowArr(QByteArray arr)
+{
+    if(!isArrayMode)
+        return;
+    const bool r = SharedMemoHelper::write2sharedMemory(arr, shmem, lastmemosett.semaName, verboseMode);
+    if(verboseMode)
+        qDebug() << "SharedMemoWriter::flushNow " << lastmemosett.sharedMemoName << r << arr.length() ;
+
+    //const QVariantHash &h, QSharedMemory &shmem, const QString &semaKey, const bool verboseMode)
 
 }
 
