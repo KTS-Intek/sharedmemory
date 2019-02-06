@@ -37,7 +37,11 @@ public:
 
     static QVariantHash readFromSharedMemory(const QString &sharedMemoKey, const QString &semaName);
 
+
+    static QPair<QStringList, QHash<QString, QHash<QString, QString> > > getFromSharedMemoryFFledStatuses(const QString &sharedMemoKey, const QString &semaName);
+
     static QVariantList readFromSharedMemoryFFledListFormat(const QString &sharedMemoKey, const QString &semaName);
+
 
     static QVariantList readFromSharedMemoryFFtaskFormat(const QString &sharedMemoKey, const QString &semaName);
 
@@ -142,6 +146,9 @@ public:
     static QString defFireflyCounterSemaName();
 
 
+    static QString defFireflyAtndStatusMemoName();
+
+    static QString defFireflyAtndStatusSemaName();
 
     //vpn
 

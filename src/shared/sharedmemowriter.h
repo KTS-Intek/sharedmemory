@@ -32,7 +32,7 @@ public slots:
 
     virtual void initStarted();
 
-    void setSharedMemArrData();
+    void changeSharedMemArrDataCounter();
 
     void setSharedMemData(QVariantHash h);
 

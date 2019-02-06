@@ -36,7 +36,7 @@ void SharedMemoWriter::initStarted()
     connect(this, &SharedMemoWriter::onFlushNow2file, this, &SharedMemoWriter::flushNow2file);
 }
 
-void SharedMemoWriter::setSharedMemArrData()//only for counter, you must wait for ready2flushArr()
+void SharedMemoWriter::changeSharedMemArrDataCounter()//only for counter, you must wait for ready2flushArr()
 {
     if(!isArrayMode)
         return;

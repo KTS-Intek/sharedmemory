@@ -124,10 +124,8 @@ QVariantHash SharedMemoHelper::readFromSharedMemory(const QString &sharedMemoKey
 
 //---------------------------------------------------------------------------------
 
-QVariantList SharedMemoHelper::readFromSharedMemoryFFledListFormat(const QString &sharedMemoKey, const QString &semaName)
+QPair<QStringList, QHash<QString, QHash<QString, QString> > > SharedMemoHelper::getFromSharedMemoryFFledStatuses(const QString &sharedMemoKey, const QString &semaName)
 {
-     QVariantList list;
-
     QSharedMemory memory(sharedMemoKey);
 
     QSystemSemaphore sema(semaName, 1);
@@ -147,6 +145,7 @@ QVariantList SharedMemoHelper::readFromSharedMemoryFFledListFormat(const QString
 
             memory.unlock();
             memory.detach();
+            sema.release();
         }
 
         if(!bufArrCompressed.isEmpty()){
@@ -155,31 +154,42 @@ QVariantList SharedMemoHelper::readFromSharedMemoryFFledListFormat(const QString
                 qDebug() << "uncompresss error ";
         }
 
-        if(!bufArrCompressed.isEmpty()){
-            QStringList keysList;
-            QHash<QString, QHash<QString,QString> > hash;
+        QStringList keysList;
+        QHash<QString, QHash<QString,QString> > hash;
 
+        if(!bufArrCompressed.isEmpty()){
             QDataStream in(&bufArrCompressed, QIODevice::ReadOnly);
             in >> keysList >> hash;
-
-            bufArrCompressed.clear();//free memory
-
-            for(int i = 0, iMax = keysList.size(); i < iMax; i++){
-                const QHash<QString,QString> h = hash.value(keysList.at(i));
-                const QList<QString> lk = h.keys();
-                QVariantHash vh;
-                for(int j = 0, jMax = lk.size(); j < jMax; j++ )
-                    vh.insert(lk.at(j), h.value(lk.at(j)));
-                if(!vh.isEmpty())
-                    list.append(vh);
-            }
         }
-
-    }else{
-        qDebug() << "can't attach error = " << memory.errorString()<< memory.key();
-        memory.detach();
+        return QPair<QStringList, QHash<QString, QHash<QString, QString> > >(keysList, hash);
     }
+    qDebug() << "can't attach error = " << memory.errorString()<< memory.key();
+    memory.detach();
+
     sema.release();
+
+    return QPair<QStringList, QHash<QString, QHash<QString, QString> > >();
+}
+
+//---------------------------------------------------------------------------------
+
+QVariantList SharedMemoHelper::readFromSharedMemoryFFledListFormat(const QString &sharedMemoKey, const QString &semaName)
+{
+     QVariantList list;
+
+     const QPair<QStringList, QHash<QString, QHash<QString, QString> > > indata = getFromSharedMemoryFFledStatuses(sharedMemoKey, semaName);
+     const QStringList keysList = indata.first;
+     const QHash<QString, QHash<QString,QString> > hash = indata.second;
+
+     for(int i = 0, iMax = keysList.size(); i < iMax; i++){
+         const QHash<QString,QString> h = hash.value(keysList.at(i));
+         const QList<QString> lk = h.keys();
+         QVariantHash vh;
+         for(int j = 0, jMax = lk.size(); j < jMax; j++ )
+             vh.insert(lk.at(j), h.value(lk.at(j)));
+         if(!vh.isEmpty())
+             list.append(vh);
+     }
 
     return list;
 }
@@ -418,6 +428,18 @@ QString SharedMemoHelper::defFireflyCounterSemaName()
     return QString("%1/firefly_counter").arg(defSemaName())              ;
 }
 
+QString SharedMemoHelper::defFireflyAtndStatusMemoName()
+{
+    return QString("%1/firelyatndtool").arg(defSharedMemoName())              ;
+
+}
+
+QString SharedMemoHelper::defFireflyAtndStatusSemaName()
+{
+    return QString("%1/firelyatndtool").arg(defSemaName())              ;
+
+}
+
 
 
 
@@ -461,6 +483,7 @@ QStringList SharedMemoHelper::getSemaList()
                             defZbyratorTaskTableSemaName()      <<
                             defElMeterRelayStateSemaName()      <<
                             defFireflyTaskTableSemaName()       <<
-                            defFireflyCounterSemaName()
+                            defFireflyCounterSemaName()         <<
+                            defFireflyAtndStatusSemaName()
                             ;
 }
