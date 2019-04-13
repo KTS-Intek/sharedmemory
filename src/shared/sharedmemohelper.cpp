@@ -124,51 +124,58 @@ QVariantHash SharedMemoHelper::readFromSharedMemory(const QString &sharedMemoKey
 
 //---------------------------------------------------------------------------------
 
-QPair<QStringList, QHash<QString, QHash<QString, QString> > > SharedMemoHelper::getFromSharedMemoryFFledStatuses(const QString &sharedMemoKey, const QString &semaName)
+SharedMemoHelper::LastFireflyStateStrct SharedMemoHelper::getFromSharedMemoryFFledStatuses(const QString &sharedMemoKey, const QString &semaName)
 {
+    LastFireflyStateStrct rez;
+    QByteArray bufArrCompressed;
+
     QSharedMemory memory(sharedMemoKey);
 
     QSystemSemaphore sema(semaName, 1);
     sema.acquire();
 
-    if(memory.attach(QSharedMemory::ReadOnly)){
+    const bool r = memory.attach(QSharedMemory::ReadOnly);
 
-        QByteArray bufArrCompressed;
-        if(true){
-            QBuffer buffer;
-            memory.lock();
-            buffer.setData((char *)memory.constData(), memory.size());
-            buffer.open(QBuffer::ReadOnly);
-            QDataStream in(&buffer);
-            in.setVersion(QDataStream::Qt_5_6);
-            in >> bufArrCompressed;
-
-            memory.unlock();
-            memory.detach();
-            sema.release();
-        }
-
-        if(!bufArrCompressed.isEmpty()){
-            bufArrCompressed = qUncompress(bufArrCompressed);
-            if(bufArrCompressed.isEmpty())
-                qDebug() << "uncompresss error ";
-        }
-
-        QStringList keysList;
-        QHash<QString, QHash<QString,QString> > hash;
-
-        if(!bufArrCompressed.isEmpty()){
-            QDataStream in(&bufArrCompressed, QIODevice::ReadOnly);
-            in >> keysList >> hash;
-        }
-        return QPair<QStringList, QHash<QString, QHash<QString, QString> > >(keysList, hash);
+    if(r){
+        QBuffer buffer;
+        memory.lock();
+        buffer.setData((char *)memory.constData(), memory.size());
+        buffer.open(QBuffer::ReadOnly);
+        bufArrCompressed = buffer.data();
+        memory.unlock();
     }
-    qDebug() << "can't attach error = " << memory.errorString()<< memory.key();
-    memory.detach();
 
+    memory.detach();
     sema.release();
 
-    return QPair<QStringList, QHash<QString, QHash<QString, QString> > >();
+    if(!r){
+        qDebug() << "can't attach error = " << memory.errorString()<< memory.key();
+        return rez;
+    }
+
+    if(!bufArrCompressed.isEmpty()){
+        bufArrCompressed = qUncompress(bufArrCompressed);
+        if(bufArrCompressed.isEmpty())
+            qDebug() << "uncompresss error ";
+    }
+
+
+
+    if(!bufArrCompressed.isEmpty()){
+        QDataStream in(&bufArrCompressed, QIODevice::ReadOnly);
+        //            in >> keysList >> hash;
+
+
+        in >> rez.listNi >> rez.hashNi2conf
+                >> rez.schedulestates.activeScheduleLine >> rez.schedulestates.confirmedScheduleLine
+                >> rez.schedulestatusActive >> rez.schedulestatusConfirmed >> rez.schedulestates.isWaiting2changePower
+                >> rez.schedulestates.futureScheduleLine >> rez.schedulestates.futuremsec >> rez.schedulestatusFuture
+                >> rez.schedulestates.isWaiting2changePowerConfirmed >> rez.schedulestates.isWaiting2changePowerFuture;
+
+    }
+
+
+    return rez;// QPair<QStringList, QHash<QString, QHash<QString, QString> > >();
 }
 
 //---------------------------------------------------------------------------------
@@ -177,12 +184,9 @@ QVariantList SharedMemoHelper::readFromSharedMemoryFFledListFormat(const QString
 {
      QVariantList list;
 
-     const QPair<QStringList, QHash<QString, QHash<QString, QString> > > indata = getFromSharedMemoryFFledStatuses(sharedMemoKey, semaName);
-     const QStringList keysList = indata.first;
-     const QHash<QString, QHash<QString,QString> > hash = indata.second;
-
-     for(int i = 0, iMax = keysList.size(); i < iMax; i++){
-         const QHash<QString,QString> h = hash.value(keysList.at(i));
+     const SharedMemoHelper::LastFireflyStateStrct indata = getFromSharedMemoryFFledStatuses(sharedMemoKey, semaName);
+     for(int i = 0, iMax = indata.listNi.size(); i < iMax; i++){
+         const QHash<QString,QString> h = indata.hashNi2conf.value(indata.listNi.at(i));
          const QList<QString> lk = h.keys();
          QVariantHash vh;
          for(int j = 0, jMax = lk.size(); j < jMax; j++ )

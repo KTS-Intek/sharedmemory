@@ -5,6 +5,9 @@
 #include <QVariantHash>
 #include <QVariantList>
 
+
+#include "fireflyschedulerv2types.h"
+
 /*
  * в цьому класі виконуються операції з спільною пам'яттю,
  * запис/читання в спільну пам'ять
@@ -29,6 +32,19 @@ class SharedMemoHelper
 
 public:
 
+    struct LastFireflyStateStrct
+    {
+        QStringList listNi;
+        QHash<QString, QHash<QString,QString> > hashNi2conf;//кешована версія БД
+        ScheduleStatesStruct  schedulestates;
+
+        QString schedulestatusActive;
+        QString schedulestatusConfirmed;
+        QString schedulestatusFuture;
+
+        LastFireflyStateStrct() {}
+    };
+
     static bool write2sharedMemory(const QVariantHash &h, QSharedMemory &shmem, const QString &semaKey, const bool verboseMode = false);
 
     static bool write2sharedMemory(const QByteArray &arr, QSharedMemory &shmem, const QString &semaKey, const bool verboseMode = false);
@@ -38,7 +54,7 @@ public:
     static QVariantHash readFromSharedMemory(const QString &sharedMemoKey, const QString &semaName);
 
 
-    static QPair<QStringList, QHash<QString, QHash<QString, QString> > > getFromSharedMemoryFFledStatuses(const QString &sharedMemoKey, const QString &semaName);
+    static LastFireflyStateStrct getFromSharedMemoryFFledStatuses(const QString &sharedMemoKey, const QString &semaName);
 
     static QVariantList readFromSharedMemoryFFledListFormat(const QString &sharedMemoKey, const QString &semaName);
 
