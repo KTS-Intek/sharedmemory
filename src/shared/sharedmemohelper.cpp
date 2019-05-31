@@ -42,8 +42,10 @@ bool SharedMemoHelper::write2sharedMemory(const QByteArray &arr, QSharedMemory &
     for(int i = 0; i < 3 && !memoReady; i++){
         memoReady = shmem.create(size);
         if(!memoReady){
+#ifndef HASGUI4USR
             if(verboseMode)
                 qDebug() << "shmem " << i << shmem.key() << shmem.errorString() ;
+#endif
             shmem.attach();
             shmem.detach();
             QThread::msleep(300);
@@ -85,7 +87,10 @@ QByteArray SharedMemoHelper::readFromSharedMemoryArr(const QString &sharedMemoKe
         memory.unlock();
         memory.detach();
     }else{
+#ifndef HASGUI4USR
+
         qDebug() << "can't attach error = " << memory.errorString() << memory.key();
+#endif
         memory.detach();
     }
     sema.release();
@@ -115,7 +120,10 @@ QVariantHash SharedMemoHelper::readFromSharedMemory(const QString &sharedMemoKey
 
 
     }else{
+#ifndef HASGUI4USR
+
         qDebug() << "can't attach error = " << memory.errorString() << memory.key();
+#endif
         memory.detach();
     }
     sema.release();
@@ -149,14 +157,20 @@ SharedMemoHelper::LastFireflyStateStrct SharedMemoHelper::getFromSharedMemoryFFl
     sema.release();
 
     if(!r){
+#ifndef HASGUI4USR
+
         qDebug() << "can't attach error = " << memory.errorString()<< memory.key();
+#endif
         return rez;
     }
 
     if(!bufArrCompressed.isEmpty()){
         bufArrCompressed = qUncompress(bufArrCompressed);
+#ifndef HASGUI4USR
+
         if(bufArrCompressed.isEmpty())
             qDebug() << "uncompresss error ";
+#endif
     }
 
 
@@ -235,7 +249,10 @@ QVariantList SharedMemoHelper::readFromSharedMemoryFFtaskFormat(const QString &s
 
 
     }else{
+#ifndef HASGUI4USR
+
         qDebug() << "can't attach error = " << memory.errorString()<< memory.key();
+#endif
         memory.detach();
     }
     sema.release();
@@ -273,7 +290,10 @@ QVariantList SharedMemoHelper::readFromSharedMemoryFFscheduleFormat(const QStrin
             list.append(vh);
         }
     }else{
+#ifndef HASGUI4USR
+
         qDebug() << "can't attach error = " << memory.errorString()<< memory.key();
+#endif
         memory.detach();
     }
     sema.release();
