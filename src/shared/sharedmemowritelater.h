@@ -46,6 +46,10 @@ public slots:
 
     void add2counterAndCheckCanFlushNow(const int &add);
 
+    void kickOffNow();
+
+private slots:
+    void detachAndDelete();
 
 };
 

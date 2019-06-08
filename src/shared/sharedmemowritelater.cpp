@@ -78,6 +78,22 @@ void SharedMemoWriteLater::add2counterAndCheckCanFlushNow(const int &add)
     checkCanFlushNow();
 }
 
+void SharedMemoWriteLater::kickOffNow()
+{
+    emit onFlushNow();
+    emit onFlushNow2file();
+    emit stopTmrFlush();
+    emit stopTmrFlush2file();
+    QTimer::singleShot(1, this, SLOT(detachAndDelete()));
+}
+
+void SharedMemoWriteLater::detachAndDelete()
+{
+    shmem.detach();
+    deleteLater();
+
+}
+
 bool SharedMemoWriteLater::checkResetCounter()
 {
     if(counter == 0)
