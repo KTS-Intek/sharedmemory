@@ -508,6 +508,11 @@ QStringList SharedMemoHelper::getSemaList()
                             defElMeterRelayStateSemaName()      <<
                             defFireflyTaskTableSemaName()       <<
                             defFireflyCounterSemaName()         <<
-                            defFireflyAtndStatusSemaName()
+                            defFireflyAtndStatusSemaName()      <<
+                            defMeterExchangeSemaName()
                             ;
 }
+
+QString SharedMemoHelper::defMeterExchangeMemoName(){ return QString("%1/meterexchange").arg(defSharedMemoName()); }
+
+QString SharedMemoHelper::defMeterExchangeSemaName(){ return QString("%1/meterexchange").arg(defSemaName()); }

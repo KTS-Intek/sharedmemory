@@ -186,7 +186,7 @@ void SharedMemoWriter::flushNow()
 
     const bool r = SharedMemoHelper::write2sharedMemory(hashMirror, shmem, lastmemosett.semaName, verboseMode);
     if(verboseMode)
-        qDebug() << "SharedMemoWriter::flushNow " << lastmemosett.sharedMemoName << r <<  hashMirror.keys();
+        qDebug() << "SharedMemoWriter::flushNow " << lastmemosett.sharedMemoName << r <<  hashMirror.keys() << shmem.errorString();
     //const QVariantHash &h, QSharedMemory &shmem, const QString &semaKey, const bool verboseMode)
 
 }

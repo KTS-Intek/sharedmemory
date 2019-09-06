@@ -191,6 +191,12 @@ public:
 
     static QStringList getSemaList();
 
+
+    static QString defMeterExchangeMemoName();
+
+    static QString defMeterExchangeSemaName();
+
+
 };
 
 #endif // SHAREDMEMOHELPER_H
