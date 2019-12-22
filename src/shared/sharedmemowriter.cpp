@@ -100,6 +100,11 @@ void SharedMemoWriter::appendShmemData(QStringList keys, QVariantList datal)
     add2counterAndCheckCanFlushNow(iMax0);
 }
 
+void SharedMemoWriter::appendLogDataList(QString key, QStringList log, QString splitter, int maxLogSize)
+{
+    appendLogData(key, log, splitter, maxLogSize);
+}
+
 
 
 void SharedMemoWriter::appendLogData(QString key, QStringList log, QString splitter, int maxLogSize)

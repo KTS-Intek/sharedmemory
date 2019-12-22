@@ -42,6 +42,7 @@ public slots:
 
     void appendShmemData(QStringList keys, QVariantList datal);
 
+    void appendLogDataList(QString key, QStringList log, QString splitter, int maxLogSize); //I need it bcs I want to use new format of connecting signals/slots
 
     void appendLogData(QString key, QStringList log, QString splitter, int maxLogSize);
 

@@ -197,6 +197,37 @@ public:
     static QString defMeterExchangeSemaName();
 
 
+    //tcp medium
+    static QString defTcpMediumServerMemoName();
+
+    static QString defTcpMediumServerSemaName();
+
+
+    static QString defTcpMediumServerLogsMemoName();
+
+    static QString defTcpMediumServerLogsSemaName();
+
+    //matilda-uart
+    static QString defMatildaUartMemoName();
+
+    static QString defMatildaUartSemaName();
+
+
+    //peredavator-bbb state protocol v8
+    static QString defPeredavatorStateMemoName();
+
+    static QString defPeredavatorStateSemaName();
+
+
+    static QString defUcServicesStateMemoName();
+
+    static QString defUcServicesStateSemaName();
+
+
+    static QString defDaAdditionalChannelsLogsMemoName();
+
+    static QString defDaAdditionalChannelsLogsSemaName();
+
 };
 
 #endif // SHAREDMEMOHELPER_H

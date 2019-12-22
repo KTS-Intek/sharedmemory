@@ -15,6 +15,13 @@ public:
 
     QSharedMemory shmem;
 
+    struct CounterMaximums
+    {
+        quint8 write2ram;
+        quint8 write2file;
+        CounterMaximums() : write2ram(5), write2file(60) {}
+    } mymaximums;
+
     quint8 counter, counter2file;
 
     bool checkResetCounter();

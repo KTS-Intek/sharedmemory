@@ -184,7 +184,18 @@ SharedMemoHelper::LastFireflyStateStrct SharedMemoHelper::getFromSharedMemoryFFl
                 >> rez.schedulestates.activeScheduleLine >> rez.schedulestates.confirmedScheduleLine
                 >> rez.schedulestatusActive >> rez.schedulestatusConfirmed >> rez.schedulestates.isWaiting2changePower
                 >> rez.schedulestates.futureScheduleLine >> rez.schedulestates.futuremsec >> rez.schedulestatusFuture
-                >> rez.schedulestates.isWaiting2changePowerConfirmed >> rez.schedulestates.isWaiting2changePowerFuture;
+                >> rez.schedulestates.isWaiting2changePowerConfirmed >> rez.schedulestates.isWaiting2changePowerFuture
+
+                //protocol v8
+        >> rez.schedulestates.activeGroupsPower.regularScheduleLine >> rez.schedulestates.activeGroupsPower.specialScheduleLine     >> rez.schedulestates.activeGroupsPower.tempScheduleLine
+        >> rez.schedulestates.activeGroupsPower.defScheduleLine     >> rez.schedulestates.activeGroupsPower.emergencyScheduleLine   >> rez.schedulestates.activeGroupsPower.grpIdsDynamic
+
+        >> rez.schedulestates.confirmedGroupsPower.regularScheduleLine >> rez.schedulestates.confirmedGroupsPower.specialScheduleLine     >> rez.schedulestates.confirmedGroupsPower.tempScheduleLine
+        >> rez.schedulestates.confirmedGroupsPower.defScheduleLine     >> rez.schedulestates.confirmedGroupsPower.emergencyScheduleLine   >> rez.schedulestates.confirmedGroupsPower.grpIdsDynamic
+
+        >> rez.schedulestates.futureGroupsPower.regularScheduleLine >> rez.schedulestates.futureGroupsPower.specialScheduleLine     >> rez.schedulestates.futureGroupsPower.tempScheduleLine
+        >> rez.schedulestates.futureGroupsPower.defScheduleLine     >> rez.schedulestates.futureGroupsPower.emergencyScheduleLine   >> rez.schedulestates.futureGroupsPower.grpIdsDynamic;
+
 
     }
 
@@ -509,10 +520,74 @@ QStringList SharedMemoHelper::getSemaList()
                             defFireflyTaskTableSemaName()       <<
                             defFireflyCounterSemaName()         <<
                             defFireflyAtndStatusSemaName()      <<
-                            defMeterExchangeSemaName()
+                            defMeterExchangeSemaName()          <<
+                            defTcpMediumServerSemaName()        <<
+                            defMatildaUartSemaName()            <<
+                            defTcpMediumServerLogsSemaName()    <<
+                            defMatildaUartSemaName()            <<
+                            defPeredavatorStateSemaName()       <<
+                            defUcServicesStateSemaName()        <<
+                            defDaAdditionalChannelsLogsSemaName()
                             ;
 }
 
-QString SharedMemoHelper::defMeterExchangeMemoName(){ return QString("%1/meterexchange").arg(defSharedMemoName()); }
+QString SharedMemoHelper::defMeterExchangeMemoName()    { return QString("%1/meterexchange").arg(defSharedMemoName())   ; }
 
-QString SharedMemoHelper::defMeterExchangeSemaName(){ return QString("%1/meterexchange").arg(defSemaName()); }
+QString SharedMemoHelper::defMeterExchangeSemaName()    { return QString("%1/meterexchange").arg(defSemaName())         ; }
+
+
+QString SharedMemoHelper::defTcpMediumServerMemoName()  { return QString("%1/tcpmediumserver").arg(defSharedMemoName()) ; }
+
+QString SharedMemoHelper::defTcpMediumServerSemaName()  { return QString("%1/tcpmediumserver").arg(defSemaName())       ; }
+
+
+QString SharedMemoHelper::defTcpMediumServerLogsMemoName()  { return QString("%1/tcpmediumserverlogs").arg(defSharedMemoName()) ; }
+
+QString SharedMemoHelper::defTcpMediumServerLogsSemaName()  { return QString("%1/tcpmediumserverlogs").arg(defSemaName())       ; }
+
+
+QString SharedMemoHelper::defMatildaUartMemoName()
+{
+   return QString("%1/matildauartgsmlog").arg(defSharedMemoName())   ;
+}
+
+QString SharedMemoHelper::defMatildaUartSemaName()
+{
+    return QString("%1/matildauartgsmlog").arg(defSemaName())         ;
+}
+
+QString SharedMemoHelper::defPeredavatorStateMemoName()
+{
+    return QString("%1/peredavatorbbbstate").arg(defSharedMemoName())   ;
+
+}
+
+QString SharedMemoHelper::defPeredavatorStateSemaName()
+{
+    return QString("%1/peredavatorbbbstate").arg(defSemaName())         ;
+
+}
+
+QString SharedMemoHelper::defUcServicesStateMemoName()
+{
+    return QString("%1/ucservicesstate").arg(defSharedMemoName())   ;
+
+}
+
+QString SharedMemoHelper::defUcServicesStateSemaName()
+{
+    return QString("%1/ucservicesstate").arg(defSemaName())         ;
+
+}
+
+QString SharedMemoHelper::defDaAdditionalChannelsLogsMemoName()
+{
+    return QString("%1/daadditionalchannels").arg(defSharedMemoName())   ;
+
+}
+
+QString SharedMemoHelper::defDaAdditionalChannelsLogsSemaName()
+{
+    return QString("%1/daadditionalchannels").arg(defSemaName())         ;
+
+}

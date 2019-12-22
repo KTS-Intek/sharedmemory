@@ -55,7 +55,7 @@ void SharedMemoWriteLater::initObjectLtr()
 
 void SharedMemoWriteLater::checkCanFlushNow()
 {
-    if(counter > 5){
+    if(counter > mymaximums.write2ram){ // 5){
         emit stopTmrFlush();
         emit onFlushNow();
     }else{
@@ -63,7 +63,7 @@ void SharedMemoWriteLater::checkCanFlushNow()
         emit startTmrFlush();
     }
 
-    if(counter2file > 60){
+    if(counter2file > mymaximums.write2file){ // 60){
         emit stopTmrFlush2file();
         emit onFlushNow2file();
     }else{
