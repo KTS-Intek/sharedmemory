@@ -53,8 +53,16 @@ void SharedMemoWriteLater::initObjectLtr()
     initObject(true);
 }
 
+void SharedMemoWriteLater::initObjectASAP()
+{
+    initObject(false);
+
+}
+
 void SharedMemoWriteLater::checkCanFlushNow()
 {
+
+
     if(counter > mymaximums.write2ram){ // 5){
         emit stopTmrFlush();
         emit onFlushNow();

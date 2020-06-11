@@ -45,6 +45,7 @@ public:
         LastFireflyStateStrct() {}
     };
 
+
     static bool write2sharedMemory(const QVariantHash &h, QSharedMemory &shmem, const QString &semaKey, const bool verboseMode = false);
 
     static bool write2sharedMemory(const QByteArray &arr, QSharedMemory &shmem, const QString &semaKey, const bool verboseMode = false);
@@ -227,6 +228,11 @@ public:
     static QString defDaAdditionalChannelsLogsMemoName();
 
     static QString defDaAdditionalChannelsLogsSemaName();
+
+    //sqlite-medium
+    static QString defSqliteMediumEventsMemoName();
+
+    static QString defSqliteMediumEventsSemaName();
 
 };
 

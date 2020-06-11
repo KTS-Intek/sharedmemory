@@ -31,6 +31,15 @@ bool SharedMemoHelper::write2sharedMemory(const QByteArray &arr, QSharedMemory &
 
     const int size = arr.size();
 
+#ifdef HASGUI4USR //for test only
+#ifdef Q_OS_LINUX
+
+    if(semaKey.contains("hlps"))
+        qDebug() << "SharedMemoHelper try write error = " <<  shmem.errorString() << shmem.key();
+#endif
+#endif
+
+
     QSystemSemaphore sema(semaKey, 1);// SemaName(), 1);
     sema.acquire();
 
@@ -73,8 +82,23 @@ QByteArray SharedMemoHelper::readFromSharedMemoryArr(const QString &sharedMemoKe
 {
     QByteArray readArr;
     QSharedMemory memory(sharedMemoKey);
+
+
+#ifdef HASGUI4USR //for test only
+#ifdef Q_OS_LINUX
+
+    if(sharedMemoKey.contains("hlps"))
+        qDebug() << "SharedMemoHelper try read error = " <<  memory.errorString() << memory.key();
+#endif
+#endif
+
     QSystemSemaphore sema(semaName, 1);
     sema.acquire();
+#ifdef HASGUI4USR //for test only
+
+    if(memory.isAttached())
+        memory.detach();
+#endif
 
     if(memory.attach(QSharedMemory::ReadOnly)){
         QBuffer buffer;
@@ -87,13 +111,21 @@ QByteArray SharedMemoHelper::readFromSharedMemoryArr(const QString &sharedMemoKe
         memory.unlock();
         memory.detach();
     }else{
-#ifndef HASGUI4USR
+//#ifndef HASGUI4USR
+#ifdef HASGUI4USR //for test only
 
-        qDebug() << "can't attach error = " << memory.errorString() << memory.key();
+        qDebug() << "SharedMemoHelper read can't attach error = " << memory.errorString() << memory.key();
 #endif
         memory.detach();
     }
     sema.release();
+
+
+#ifdef HASGUI4USR //for test only
+
+        qDebug() << "SharedMemoHelper read attach !error = " << memory.errorString() << memory.key();
+#endif
+
     return readArr;
 }
 
@@ -103,8 +135,21 @@ QVariantHash SharedMemoHelper::readFromSharedMemory(const QString &sharedMemoKey
 {
     QVariantHash hash;
     QSharedMemory memory(sharedMemoKey);
+
+#ifdef HASGUI4USR //for test only
+#ifdef Q_OS_LINUX
+ if(sharedMemoKey.contains("hlps"))
+        qDebug() << "SharedMemoHelper try attach error = " <<  memory.errorString() << memory.key() << semaName << memory.isAttached();
+#endif
+#endif
     QSystemSemaphore sema(semaName, 1);
     sema.acquire();
+
+#ifdef HASGUI4USR //for test only
+
+    if(memory.isAttached())
+        memory.detach();
+#endif
 
     if(memory.attach(QSharedMemory::ReadOnly)){
         QBuffer buffer;
@@ -120,13 +165,21 @@ QVariantHash SharedMemoHelper::readFromSharedMemory(const QString &sharedMemoKey
 
 
     }else{
-#ifndef HASGUI4USR
+//#ifndef HASGUI4USR
+#ifdef HASGUI4USR //for test only
 
-        qDebug() << "can't attach error = " << memory.errorString() << memory.key();
+        qDebug() << "SharedMemoHelper can't attach error = " << memory.errorString() << memory.key();
 #endif
         memory.detach();
     }
     sema.release();
+
+
+#ifdef HASGUI4USR //for test only
+
+        qDebug() << "SharedMemoHelper attach !error = " << memory.errorString() << memory.key();
+#endif
+
     return hash;
 }
 
@@ -186,15 +239,16 @@ SharedMemoHelper::LastFireflyStateStrct SharedMemoHelper::getFromSharedMemoryFFl
                 >> rez.schedulestates.futureScheduleLine >> rez.schedulestates.futuremsec >> rez.schedulestatusFuture
                 >> rez.schedulestates.isWaiting2changePowerConfirmed >> rez.schedulestates.isWaiting2changePowerFuture
 
-                //protocol v8
-        >> rez.schedulestates.activeGroupsPower.regularScheduleLine >> rez.schedulestates.activeGroupsPower.specialScheduleLine     >> rez.schedulestates.activeGroupsPower.tempScheduleLine
-        >> rez.schedulestates.activeGroupsPower.defScheduleLine     >> rez.schedulestates.activeGroupsPower.emergencyScheduleLine   >> rez.schedulestates.activeGroupsPower.grpIdsDynamic
+                //protocol v8,
+                >> rez.schedulestates.activeGroupsPower.regularScheduleLine >> rez.schedulestates.activeGroupsPower.specialScheduleLine     >> rez.schedulestates.activeGroupsPower.tempScheduleLine
+                >> rez.schedulestates.activeGroupsPower.defScheduleLine     >> rez.schedulestates.activeGroupsPower.emergencyScheduleLine   >> rez.schedulestates.activeGroupsPower.grpIdsDynamic
 
-        >> rez.schedulestates.confirmedGroupsPower.regularScheduleLine >> rez.schedulestates.confirmedGroupsPower.specialScheduleLine     >> rez.schedulestates.confirmedGroupsPower.tempScheduleLine
-        >> rez.schedulestates.confirmedGroupsPower.defScheduleLine     >> rez.schedulestates.confirmedGroupsPower.emergencyScheduleLine   >> rez.schedulestates.confirmedGroupsPower.grpIdsDynamic
+                >> rez.schedulestates.confirmedGroupsPower.regularScheduleLine >> rez.schedulestates.confirmedGroupsPower.specialScheduleLine     >> rez.schedulestates.confirmedGroupsPower.tempScheduleLine
+                >> rez.schedulestates.confirmedGroupsPower.defScheduleLine     >> rez.schedulestates.confirmedGroupsPower.emergencyScheduleLine   >> rez.schedulestates.confirmedGroupsPower.grpIdsDynamic
 
-        >> rez.schedulestates.futureGroupsPower.regularScheduleLine >> rez.schedulestates.futureGroupsPower.specialScheduleLine     >> rez.schedulestates.futureGroupsPower.tempScheduleLine
-        >> rez.schedulestates.futureGroupsPower.defScheduleLine     >> rez.schedulestates.futureGroupsPower.emergencyScheduleLine   >> rez.schedulestates.futureGroupsPower.grpIdsDynamic;
+                >> rez.schedulestates.futureGroupsPower.regularScheduleLine >> rez.schedulestates.futureGroupsPower.specialScheduleLine     >> rez.schedulestates.futureGroupsPower.tempScheduleLine
+                >> rez.schedulestates.futureGroupsPower.defScheduleLine     >> rez.schedulestates.futureGroupsPower.emergencyScheduleLine   >> rez.schedulestates.futureGroupsPower.grpIdsDynamic
+                ;
 
 
     }
@@ -207,18 +261,18 @@ SharedMemoHelper::LastFireflyStateStrct SharedMemoHelper::getFromSharedMemoryFFl
 
 QVariantList SharedMemoHelper::readFromSharedMemoryFFledListFormat(const QString &sharedMemoKey, const QString &semaName)
 {
-     QVariantList list;
+    QVariantList list;
 
-     const SharedMemoHelper::LastFireflyStateStrct indata = getFromSharedMemoryFFledStatuses(sharedMemoKey, semaName);
-     for(int i = 0, iMax = indata.listNi.size(); i < iMax; i++){
-         const QHash<QString,QString> h = indata.hashNi2conf.value(indata.listNi.at(i));
-         const QList<QString> lk = h.keys();
-         QVariantHash vh;
-         for(int j = 0, jMax = lk.size(); j < jMax; j++ )
-             vh.insert(lk.at(j), h.value(lk.at(j)));
-         if(!vh.isEmpty())
-             list.append(vh);
-     }
+    const SharedMemoHelper::LastFireflyStateStrct indata = getFromSharedMemoryFFledStatuses(sharedMemoKey, semaName);
+    for(int i = 0, iMax = indata.listNi.size(); i < iMax; i++){
+        const QHash<QString,QString> h = indata.hashNi2conf.value(indata.listNi.at(i));
+        const QList<QString> lk = h.keys();
+        QVariantHash vh;
+        for(int j = 0, jMax = lk.size(); j < jMax; j++ )
+            vh.insert(lk.at(j), h.value(lk.at(j)));
+        if(!vh.isEmpty())
+            list.append(vh);
+    }
 
     return list;
 }
@@ -508,8 +562,8 @@ QStringList SharedMemoHelper::getSemaList()
                             defSntpServerSemaName()             <<
                             defSvahaServerSemaName()            <<
                             defFireflyLedListSemaName()         <<
-//                            defFireflyScheduleSemaName()        <<
-//                            defFireflyTaskSemaName()            <<
+                            //                            defFireflyScheduleSemaName()        <<
+                            //                            defFireflyTaskSemaName()            <<
                             defFireflyRelaySemaName()           <<
                             defFireflyStatusSemaName()          <<
                             defFireflyTempScheduleSemaName()    <<
@@ -527,7 +581,8 @@ QStringList SharedMemoHelper::getSemaList()
                             defMatildaUartSemaName()            <<
                             defPeredavatorStateSemaName()       <<
                             defUcServicesStateSemaName()        <<
-                            defDaAdditionalChannelsLogsSemaName()
+                            defDaAdditionalChannelsLogsSemaName() <<
+                            defSqliteMediumEventsSemaName()
                             ;
 }
 
@@ -548,7 +603,7 @@ QString SharedMemoHelper::defTcpMediumServerLogsSemaName()  { return QString("%1
 
 QString SharedMemoHelper::defMatildaUartMemoName()
 {
-   return QString("%1/matildauartgsmlog").arg(defSharedMemoName())   ;
+    return QString("%1/matildauartgsmlog").arg(defSharedMemoName())   ;
 }
 
 QString SharedMemoHelper::defMatildaUartSemaName()
@@ -591,3 +646,16 @@ QString SharedMemoHelper::defDaAdditionalChannelsLogsSemaName()
     return QString("%1/daadditionalchannels").arg(defSemaName())         ;
 
 }
+
+QString SharedMemoHelper::defSqliteMediumEventsMemoName()
+{
+    return QString("%1/sqlitemediumevents").arg(defSharedMemoName())   ;
+
+}
+
+QString SharedMemoHelper::defSqliteMediumEventsSemaName()
+{
+    return QString("%1/sqlitemediumevents").arg(defSemaName())   ;
+
+}
+

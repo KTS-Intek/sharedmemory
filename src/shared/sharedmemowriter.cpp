@@ -6,12 +6,68 @@ SharedMemoWriter::SharedMemoWriter(const QString &sharedMemoName, const QString 
     SharedMemoWriteLater(sharedMemoName, semaName, write2fileName, delay, delay2fileMsec, verboseMode, parent)
 {
     setMirrorMode(false);
+
+    useMirrorLogs = false;
+
 //    isConnectionReady = false;
 }
 
 QVariantHash SharedMemoWriter::getLastSavedObj() const
 {
     return hashMirror;
+}
+
+QVariantHash SharedMemoWriter::convertMirrorLogs()
+{
+    return convertMirrorLogsExt(hashMirrorLogs);
+}
+
+QVariantHash SharedMemoWriter::convertMirrorLogsExt(const QHash<QString, QStringList> &hashMirrorLogs)
+{
+    QVariantHash h;
+    const QList<QString> lk = hashMirrorLogs.keys();
+    for(int i = 0, imax = lk.size(); i < imax; i++){
+        const QStringList l = hashMirrorLogs.value(lk.at(i));
+        const QString line = l.join("\n");
+        const QVariant v = QVariant(line);
+        h.insert(lk.at(i), v);
+
+    }
+    return h;
+}
+
+QHash<QString, QStringList> SharedMemoWriter::convertToMirrorLogs()
+{
+    return convertToMirrorLogsExt(hashMirror);
+}
+
+QHash<QString, QStringList> SharedMemoWriter::convertToMirrorLogsExt(const QVariantHash &hashMirror)
+{
+    QHash<QString, QStringList> h;
+    return convertToMirrorLogsExtV2(hashMirror, h);
+}
+
+QHash<QString, QStringList> SharedMemoWriter::convertToMirrorLogsExtV2(const QVariantHash &hashMirror, const QHash<QString, QStringList> &inithash)
+{
+    QHash<QString, QStringList> h = inithash;
+    const QList<QString> lk = hashMirror.keys();
+    for(int i = 0, imax = lk.size(); i < imax; i++)
+        h.insert(lk.at(i), hashMirror.value(lk.at(i)).toString().split("\n"));
+    return h;
+}
+
+QStringList SharedMemoWriter::getDataByKey(const QString &key, const QString &splitter)
+{
+    return useMirrorLogs ?
+                hashMirrorLogs.value(key) :
+                hashMirror.value(key).toString().split(splitter, QString::SkipEmptyParts);
+}
+
+QVariantHash SharedMemoWriter::getCurrentMirror()
+{
+    return useMirrorLogs ?
+                convertMirrorLogs() :
+                hashMirror;
 }
 
 //QByteArray SharedMemoWriter::getLastSavedObjArr() const
@@ -51,7 +107,14 @@ void SharedMemoWriter::setSharedMemData(QVariantHash h)
 {    
     if(isArrayMode)
         return;
-    hashMirror = h;
+
+
+    if(useMirrorLogs){
+        hashMirrorLogs = convertToMirrorLogsExt(h);//it takes data from
+    }else{
+         hashMirror = h;
+    }
+
     checkCanFlushNow();
 }
 
@@ -63,8 +126,23 @@ void SharedMemoWriter::setSharedMemData(QString key, QVariant data)
 //        qDebug() << "setSharedMemData " << key << data;
     if(isArrayMode)
         return;
-    hashMirror.insert(key, data);
+
+    if(useMirrorLogs)
+        hashMirrorLogs.insert(key, data.toString().split("\n"));
+    else
+        hashMirror.insert(key, data);
+
     checkCanFlushNow();
+}
+
+void SharedMemoWriter::setSharedMemDataLogs(const QString &key, const QStringList &logs, const QString &splitter)
+{
+    if(useMirrorLogs){
+        hashMirrorLogs.insert(key, logs);
+        checkCanFlushNow();
+    }else{
+        setSharedMemData(key, logs.join(splitter));
+    }
 }
 
 
@@ -73,11 +151,18 @@ void SharedMemoWriter::appendShmemData(QVariantHash h)
 {
     if(isArrayMode)
         return;
-    const QList<QString> lk = h.keys();
-    const int iMax = lk.size();
-    for(int i = 0; i < iMax; i++)
-        hashMirror.insert(lk.at(i), h.value(lk.at(i)));
 
+    const int iMax = h.size();
+
+    if(useMirrorLogs){
+        hashMirrorLogs = convertToMirrorLogsExtV2(h, hashMirrorLogs);
+    }else{
+
+        const QList<QString> lk = h.keys();
+        for(int i = 0; i < iMax; i++)
+            hashMirror.insert(lk.at(i), h.value(lk.at(i)));
+
+    }
     add2counterAndCheckCanFlushNow(iMax);
 
 
@@ -111,12 +196,14 @@ void SharedMemoWriter::appendLogData(QString key, QStringList log, QString split
 {
     if(isArrayMode)
         return;
-    QStringList l = hashMirror.value(key).toString().split(splitter, QString::SkipEmptyParts);
+    QStringList l = getDataByKey(key, splitter);
     l.append(log);
     const int r = l.size();
-    if(r > maxLogSize)
+    if(r > (maxLogSize * 1.1))
         l = l.mid(r - maxLogSize, maxLogSize);
-    setSharedMemData(key, l.join("\n"));
+
+    setSharedMemDataLogs(key, l, splitter);
+
 }
 
 void SharedMemoWriter::appendLogData(QString key, QString line, QString splitter, int maxLogSize)
@@ -124,12 +211,31 @@ void SharedMemoWriter::appendLogData(QString key, QString line, QString splitter
     appendLogData(key, QStringList(line), splitter, maxLogSize);
 }
 
+void SharedMemoWriter::appendLogDataTest(QString key, QString line, QString splitter, int maxLogSize)
+{
+
+    appendLogData(key, QStringList(line), splitter, maxLogSize);
+}
+
+void SharedMemoWriter::appendLogDataLine(QString key, QString line, QString splitter, int maxLogSize)
+{
+    appendLogData(key, QStringList(line), splitter, maxLogSize);
+
+}
+
 void SharedMemoWriter::removeTheseKeys(QStringList keys2del)
 {
     if(isArrayMode)
         return;
-    for(int i = 0, imax = keys2del.size(); i < imax; i++)
-        hashMirror.remove(keys2del.at(i));
+
+    if(useMirrorLogs){
+        for(int i = 0, imax = keys2del.size(); i < imax; i++)
+            hashMirrorLogs.remove(keys2del.at(i));
+    }else{
+
+        for(int i = 0, imax = keys2del.size(); i < imax; i++)
+            hashMirror.remove(keys2del.at(i));
+    }
 }
 
 void SharedMemoWriter::checkRemoveKeys(QStringList ldonotdel)
@@ -152,10 +258,24 @@ void SharedMemoWriter::flushAllNow()
     flushNow2file();
 }
 
+void SharedMemoWriter::flushAllNowAndDie()
+{
+    flushAllNow();
+    deleteLater();
+}
+
 
 
 void SharedMemoWriter::restoreOldVersion()
 {
+    if(getMirrorMode()){
+       const QByteArray arr = SharedMemoHelper::readFromSharedMemoryArr(lastmemosett.sharedMemoName, lastmemosett.semaName);
+        if(!arr.isEmpty()){
+//            flushNowArr(arr);
+            emit onRestoredMemoArr(arr);
+        }
+        return;
+    }
     const QVariantHash h = SharedMemoHelper::readFromSharedMemory(lastmemosett.sharedMemoName, lastmemosett.semaName);
     if(!h.isEmpty()){
         setSharedMemData(h);
@@ -189,7 +309,9 @@ void SharedMemoWriter::flushNow()
         return;
     }
 
-    const bool r = SharedMemoHelper::write2sharedMemory(hashMirror, shmem, lastmemosett.semaName, verboseMode);
+    const QVariantHash h = getCurrentMirror();
+
+    const bool r = SharedMemoHelper::write2sharedMemory(h, shmem, lastmemosett.semaName, verboseMode);
     if(verboseMode)
         qDebug() << "SharedMemoWriter::flushNow " << lastmemosett.sharedMemoName << r <<  hashMirror.keys() << shmem.errorString();
     //const QVariantHash &h, QSharedMemory &shmem, const QString &semaKey, const bool verboseMode)
@@ -207,7 +329,7 @@ void SharedMemoWriter::flushNow2file()
         return;
 
     QString err;
-    const bool b = SharedMemoHelper::saveSharedMemory2file(hashMirror, lastmemosett.write2fileName, err);
+    const bool b = SharedMemoHelper::saveSharedMemory2file(getCurrentMirror(), lastmemosett.write2fileName, err);
     if(!b || verboseMode)
         qDebug() << "SharedMemoWriter save 2 file " << b << err << lastmemosett.write2fileName << hashMirror.keys() ;
 

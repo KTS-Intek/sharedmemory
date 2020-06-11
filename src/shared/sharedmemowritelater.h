@@ -19,7 +19,7 @@ public:
     {
         quint8 write2ram;
         quint8 write2file;
-        CounterMaximums() : write2ram(5), write2file(60) {}
+        CounterMaximums() : write2ram(60), write2file(120) {}
     } mymaximums;
 
     quint8 counter, counter2file;
@@ -48,6 +48,7 @@ public slots:
     void initObject(const bool &restoreWithDelay);
 
     void initObjectLtr();
+    void initObjectASAP();
 
     void checkCanFlushNow();
 
