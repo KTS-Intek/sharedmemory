@@ -29,15 +29,9 @@ bool SharedMemoHelper::write2sharedMemory(const QVariantHash &h, QSharedMemory &
 bool SharedMemoHelper::write2sharedMemory(const QByteArray &arr, QSharedMemory &shmem, const QString &semaKey, const bool verboseMode)
 {
 
+    if(semaKey.isEmpty())
+        return false;
     const int size = arr.size();
-
-#ifdef HASGUI4USR //for test only
-#ifdef Q_OS_LINUX
-
-    if(semaKey.contains("hlps"))
-        qDebug() << "SharedMemoHelper try write error = " <<  shmem.errorString() << shmem.key();
-#endif
-#endif
 
 
     QSystemSemaphore sema(semaKey, 1);// SemaName(), 1);
@@ -81,24 +75,15 @@ bool SharedMemoHelper::write2sharedMemory(const QByteArray &arr, QSharedMemory &
 QByteArray SharedMemoHelper::readFromSharedMemoryArr(const QString &sharedMemoKey, const QString &semaName)
 {
     QByteArray readArr;
+
+    if(sharedMemoKey.isEmpty() || semaName.isEmpty())
+        return readArr;
+
     QSharedMemory memory(sharedMemoKey);
 
 
-#ifdef HASGUI4USR //for test only
-#ifdef Q_OS_LINUX
-
-    if(sharedMemoKey.contains("hlps"))
-        qDebug() << "SharedMemoHelper try read error = " <<  memory.errorString() << memory.key();
-#endif
-#endif
-
     QSystemSemaphore sema(semaName, 1);
     sema.acquire();
-#ifdef HASGUI4USR //for test only
-
-    if(memory.isAttached())
-        memory.detach();
-#endif
 
     if(memory.attach(QSharedMemory::ReadOnly)){
         QBuffer buffer;
@@ -111,8 +96,7 @@ QByteArray SharedMemoHelper::readFromSharedMemoryArr(const QString &sharedMemoKe
         memory.unlock();
         memory.detach();
     }else{
-//#ifndef HASGUI4USR
-#ifdef HASGUI4USR //for test only
+#ifndef HASGUI4USR
 
         qDebug() << "SharedMemoHelper read can't attach error = " << memory.errorString() << memory.key();
 #endif
@@ -121,10 +105,6 @@ QByteArray SharedMemoHelper::readFromSharedMemoryArr(const QString &sharedMemoKe
     sema.release();
 
 
-#ifdef HASGUI4USR //for test only
-
-        qDebug() << "SharedMemoHelper read attach !error = " << memory.errorString() << memory.key();
-#endif
 
     return readArr;
 }
@@ -134,22 +114,18 @@ QByteArray SharedMemoHelper::readFromSharedMemoryArr(const QString &sharedMemoKe
 QVariantHash SharedMemoHelper::readFromSharedMemory(const QString &sharedMemoKey, const QString &semaName)
 {
     QVariantHash hash;
+
+    if(sharedMemoKey.isEmpty() || semaName.isEmpty())
+        return hash;
+
+
     QSharedMemory memory(sharedMemoKey);
 
-#ifdef HASGUI4USR //for test only
-#ifdef Q_OS_LINUX
- if(sharedMemoKey.contains("hlps"))
-        qDebug() << "SharedMemoHelper try attach error = " <<  memory.errorString() << memory.key() << semaName << memory.isAttached();
-#endif
-#endif
+
     QSystemSemaphore sema(semaName, 1);
     sema.acquire();
 
-#ifdef HASGUI4USR //for test only
 
-    if(memory.isAttached())
-        memory.detach();
-#endif
 
     if(memory.attach(QSharedMemory::ReadOnly)){
         QBuffer buffer;
@@ -165,8 +141,7 @@ QVariantHash SharedMemoHelper::readFromSharedMemory(const QString &sharedMemoKey
 
 
     }else{
-//#ifndef HASGUI4USR
-#ifdef HASGUI4USR //for test only
+#ifndef HASGUI4USR
 
         qDebug() << "SharedMemoHelper can't attach error = " << memory.errorString() << memory.key();
 #endif
@@ -174,11 +149,6 @@ QVariantHash SharedMemoHelper::readFromSharedMemory(const QString &sharedMemoKey
     }
     sema.release();
 
-
-#ifdef HASGUI4USR //for test only
-
-        qDebug() << "SharedMemoHelper attach !error = " << memory.errorString() << memory.key();
-#endif
 
     return hash;
 }
@@ -368,6 +338,8 @@ QVariantList SharedMemoHelper::readFromSharedMemoryFFscheduleFormat(const QStrin
 
 bool SharedMemoHelper::saveSharedMemory2file(const QVariantHash &hash, const QString &fileName, QString &errString)
 {
+    if(fileName.isEmpty())
+        return false;
     QString path2dir = fileName.left(fileName.lastIndexOf("/"));
     QDir dir(path2dir);
     if(!dir.exists())

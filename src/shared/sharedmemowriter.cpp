@@ -309,6 +309,8 @@ void SharedMemoWriter::flushNow()
         return;
     }
 
+    if(lastmemosett.sharedMemoName.isEmpty())
+        return;
     const QVariantHash h = getCurrentMirror();
 
     const bool r = SharedMemoHelper::write2sharedMemory(h, shmem, lastmemosett.semaName, verboseMode);
@@ -328,6 +330,8 @@ void SharedMemoWriter::flushNow2file()
     if(!checkResetCounter2file())
         return;
 
+    if(lastmemosett.write2fileName.isEmpty())
+        return;
     QString err;
     const bool b = SharedMemoHelper::saveSharedMemory2file(getCurrentMirror(), lastmemosett.write2fileName, err);
     if(!b || verboseMode)
@@ -338,6 +342,8 @@ void SharedMemoWriter::flushNow2file()
 void SharedMemoWriter::flushNowArr(QByteArray arr)
 {
     if(!isArrayMode)
+        return;
+    if(lastmemosett.sharedMemoName.isEmpty())
         return;
     const bool r = SharedMemoHelper::write2sharedMemory(arr, shmem, lastmemosett.semaName, verboseMode);
     if(verboseMode)
