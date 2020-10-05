@@ -550,7 +550,7 @@ QStringList SharedMemoHelper::getSemaList()
                             defTcpMediumServerSemaName()        <<
                             defMatildaUartSemaName()            <<
                             defTcpMediumServerLogsSemaName()    <<
-                            defMatildaUartSemaName()            <<
+                            defUcServicesStateMemoName()            <<
                             defPeredavatorStateSemaName()       <<
                             defUcServicesStateSemaName()        <<
                             defDaAdditionalChannelsLogsSemaName() <<
