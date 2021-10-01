@@ -10,6 +10,7 @@
 #define NETTABLE_CONNTYPE_LOCALSERVERSOCKET 4
 #define NETTABLE_CONNTYPE_LOCALCLIENTSOCKET 5
 
+#define NETTABLE_CONNTYPE_UNK               0xFF
 
 struct ConnectionTableInSharedMemoryConnection
 {

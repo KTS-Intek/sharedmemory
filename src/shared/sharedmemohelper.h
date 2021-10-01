@@ -234,6 +234,23 @@ public:
 
     static QString defSqliteMediumEventsSemaName();
 
+
+    //data-holder
+    static QString defDataHolderMemoName();
+
+    static QString defDataHolderSemaName();
+
+    //modbus-bbb
+    static QString defModbusBBBLosMemoName();
+
+    static QString defModbusBBBLosSemaName();
+
+    static QString defModbusBBBServicesStateMemoName();
+
+    static QString defModbusBBBServicesStateSemaName();
+
+
+
 };
 
 #endif // SHAREDMEMOHELPER_H

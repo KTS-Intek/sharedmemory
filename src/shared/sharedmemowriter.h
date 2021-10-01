@@ -2,9 +2,7 @@
 #define SHAREDMEMOWRITER_H
 
 #include "src/shared/sharedmemowritelater.h"
-#include <QObject>
-#include <QSharedMemory>
-#include <QVariantHash>
+
 
 class SharedMemoWriter : public SharedMemoWriteLater
 {

@@ -28,6 +28,7 @@ bool SharedMemoHelper::write2sharedMemory(const QVariantHash &h, QSharedMemory &
 
 bool SharedMemoHelper::write2sharedMemory(const QByteArray &arr, QSharedMemory &shmem, const QString &semaKey, const bool verboseMode)
 {
+    Q_UNUSED(verboseMode);
 
     if(semaKey.isEmpty())
         return false;
@@ -45,10 +46,10 @@ bool SharedMemoHelper::write2sharedMemory(const QByteArray &arr, QSharedMemory &
     for(int i = 0; i < 3 && !memoReady; i++){
         memoReady = shmem.create(size);
         if(!memoReady){
-#ifndef HASGUI4USR
-            if(verboseMode)
-                qDebug() << "shmem " << i << shmem.key() << shmem.errorString() ;
-#endif
+//#ifdef HASGUI4USR
+//            if(verboseMode)
+//                qDebug() << "shmem " << i << shmem.key() << shmem.errorString() ;
+//#endif
             shmem.attach();
             shmem.detach();
             QThread::msleep(300);
@@ -554,7 +555,10 @@ QStringList SharedMemoHelper::getSemaList()
                             defPeredavatorStateSemaName()       <<
                             defUcServicesStateSemaName()        <<
                             defDaAdditionalChannelsLogsSemaName() <<
-                            defSqliteMediumEventsSemaName()
+                            defSqliteMediumEventsSemaName()     <<
+                            defDataHolderSemaName()             <<
+                            defModbusBBBLosSemaName()           <<
+                            defModbusBBBServicesStateSemaName()
                             ;
 }
 
@@ -628,6 +632,41 @@ QString SharedMemoHelper::defSqliteMediumEventsMemoName()
 QString SharedMemoHelper::defSqliteMediumEventsSemaName()
 {
     return QString("%1/sqlitemediumevents").arg(defSemaName())   ;
+
+}
+
+QString SharedMemoHelper::defDataHolderMemoName()
+{
+    return QString("%1/dataholder").arg(defSharedMemoName())        ;
+
+}
+
+QString SharedMemoHelper::defDataHolderSemaName()
+{
+    return QString("%1/dataholder").arg(defSemaName())     ;
+
+}
+
+QString SharedMemoHelper::defModbusBBBLosMemoName()
+{
+    return QString("%1/modbusbbb").arg(defSharedMemoName())        ;
+
+}
+
+QString SharedMemoHelper::defModbusBBBLosSemaName()
+{
+    return QString("%1/modbusbbb").arg(defSemaName())     ;
+
+}
+
+QString SharedMemoHelper::defModbusBBBServicesStateMemoName()
+{
+    return QString("%1/modbusbbbservice").arg(defSharedMemoName())        ;
+}
+
+QString SharedMemoHelper::defModbusBBBServicesStateSemaName()
+{
+    return QString("%1/modbusbbbservice").arg(defSemaName())     ;
 
 }
 

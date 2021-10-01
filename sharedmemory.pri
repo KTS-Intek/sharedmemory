@@ -6,6 +6,8 @@
 
 INCLUDEPATH  += $$PWD\
                 $$PWD/../../defines/defines
+                $$PWD/../../defines/define-types
+
 
 HEADERS += \
     $$PWD/src/shared/connectiontableinsharedmemory.h \
