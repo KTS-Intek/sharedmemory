@@ -8,11 +8,12 @@ class SharedMemoWriter : public SharedMemoWriteLater
 {
     Q_OBJECT
 public:
-    explicit SharedMemoWriter(const QString &sharedMemoName, const QString &semaName, const QString &write2fileName, const int &delay, const int &delay2fileMsec, const bool &verboseMode, QObject *parent = nullptr);
+    explicit SharedMemoWriter(const QString &sharedMemoName, const QString &semaName, const QString &write2fileName,
+                              const int &delay, const int &delay2fileMsec, const bool &verboseMode, QObject *parent = nullptr);
     QVariantHash hashMirror;
     QHash<QString,QStringList> hashMirrorLogs;
 
-    bool useMirrorLogs;
+    bool useMirrorLogs;//what the hell is that???, try to add comments to such variables
 
     QVariantHash getLastSavedObj() const;
 

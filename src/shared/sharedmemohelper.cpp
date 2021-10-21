@@ -14,14 +14,19 @@
 
 bool SharedMemoHelper::write2sharedMemory(const QVariantHash &h, QSharedMemory &shmem, const QString &semaKey, const bool verboseMode)
 {
-    QByteArray arr;
 
+    return write2sharedMemory(getArrFromVarHash(h), shmem, semaKey, verboseMode);
+}
+
+//---------------------------------------------------------------------------------
+
+QByteArray SharedMemoHelper::getArrFromVarHash(const QVariantHash &h)
+{
+    QByteArray arr;
     QDataStream out(&arr, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_6);
     out << h;
-
-
-    return write2sharedMemory(arr, shmem, semaKey, verboseMode);
+    return out;
 }
 
 //---------------------------------------------------------------------------------

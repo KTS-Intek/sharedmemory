@@ -48,6 +48,8 @@ public:
 
     static bool write2sharedMemory(const QVariantHash &h, QSharedMemory &shmem, const QString &semaKey, const bool verboseMode = false);
 
+    static QByteArray getArrFromVarHash(const QVariantHash &h);
+
     static bool write2sharedMemory(const QByteArray &arr, QSharedMemory &shmem, const QString &semaKey, const bool verboseMode = false);
 
     static QByteArray readFromSharedMemoryArr(const QString &sharedMemoKey, const QString &semaName);

@@ -37,7 +37,7 @@ signals:
     void stopTmrFlush2file();
 
 
-    void onRestoreOldVersion();
+    void onRestoreOldVersion(); //Init is almost done
     void onFlushNow();
     void onFlushNow2file();
     void onInitStarted();
