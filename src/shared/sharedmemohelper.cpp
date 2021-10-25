@@ -26,7 +26,7 @@ QByteArray SharedMemoHelper::getArrFromVarHash(const QVariantHash &h)
     QDataStream out(&arr, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_6);
     out << h;
-    return out;
+    return arr;
 }
 
 //---------------------------------------------------------------------------------
@@ -102,10 +102,10 @@ QByteArray SharedMemoHelper::readFromSharedMemoryArr(const QString &sharedMemoKe
         memory.unlock();
         memory.detach();
     }else{
-#ifndef HASGUI4USR
+//#ifndef HASGUI4USR
 
-        qDebug() << "SharedMemoHelper read can't attach error = " << memory.errorString() << memory.key();
-#endif
+//        qDebug() << "SharedMemoHelper read can't attach error = " << memory.errorString() << memory.key();
+//#endif
         memory.detach();
     }
     sema.release();
@@ -147,10 +147,10 @@ QVariantHash SharedMemoHelper::readFromSharedMemory(const QString &sharedMemoKey
 
 
     }else{
-#ifndef HASGUI4USR
+//#ifndef HASGUI4USR
 
-        qDebug() << "SharedMemoHelper can't attach error = " << memory.errorString() << memory.key();
-#endif
+//        qDebug() << "SharedMemoHelper can't attach error = " << memory.errorString() << memory.key();
+//#endif
         memory.detach();
     }
     sema.release();

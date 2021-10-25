@@ -314,11 +314,11 @@ void SharedMemoWriter::flushNow()
         return;
     const QVariantHash h = getCurrentMirror();
 
-//    const bool r =
+    const bool r =
             SharedMemoHelper::write2sharedMemory(h, shmem, lastmemosett.semaName, verboseMode);
 
-//    if(verboseMode)
-//        qDebug() << "SharedMemoWriter::flushNow " << lastmemosett.sharedMemoName << r <<  hashMirror.keys() << shmem.errorString();
+    if(verboseMode)
+        qDebug() << "SharedMemoWriter::flushNow " << lastmemosett.sharedMemoName << r <<  hashMirror.keys() << shmem.errorString();
     //const QVariantHash &h, QSharedMemory &shmem, const QString &semaKey, const bool verboseMode)
 
 }
@@ -348,10 +348,11 @@ void SharedMemoWriter::flushNowArr(QByteArray arr)
         return;
     if(lastmemosett.sharedMemoName.isEmpty())
         return;
-//    const bool r =
+    const bool r =
             SharedMemoHelper::write2sharedMemory(arr, shmem, lastmemosett.semaName, verboseMode);
-//    if(verboseMode)
-//        qDebug() << "SharedMemoWriter::flushNow " << lastmemosett.sharedMemoName << r << arr.length() ;
+
+    if(verboseMode)
+        qDebug() << "SharedMemoWriter::flushNow " << lastmemosett.sharedMemoName << r << arr.length() ;
 
     //const QVariantHash &h, QSharedMemory &shmem, const QString &semaKey, const bool verboseMode)
 
