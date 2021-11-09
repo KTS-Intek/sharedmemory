@@ -57,14 +57,14 @@ public:
     static QVariantHash readFromSharedMemory(const QString &sharedMemoKey, const QString &semaName);
 
 
-    static LastFireflyStateStrct getFromSharedMemoryFFledStatuses(const QString &sharedMemoKey, const QString &semaName);
+    static LastFireflyStateStrct getFromSharedMemoryFFledStatuses(const QString &sharedMemoKey, const QString &semaName, const bool &verboseMode);
 
-    static QVariantList readFromSharedMemoryFFledListFormat(const QString &sharedMemoKey, const QString &semaName);
+    static QVariantList readFromSharedMemoryFFledListFormat(const QString &sharedMemoKey, const QString &semaName, const bool &verboseMode);
 
 
-    static QVariantList readFromSharedMemoryFFtaskFormat(const QString &sharedMemoKey, const QString &semaName);
+    static QVariantList readFromSharedMemoryFFtaskFormat(const QString &sharedMemoKey, const QString &semaName, const bool &verboseMode);
 
-    static QVariantList readFromSharedMemoryFFscheduleFormat(const QString &sharedMemoKey, const QString &semaName);
+    static QVariantList readFromSharedMemoryFFscheduleFormat(const QString &sharedMemoKey, const QString &semaName, const bool &verboseMode);
 
     static bool saveSharedMemory2file(const QVariantHash &hash, const QString &fileName, QString &errString);
 

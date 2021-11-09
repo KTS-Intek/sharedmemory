@@ -178,7 +178,7 @@ void SharedMemoWriter::appendShmemData(QStringList keys, QVariantList datal)
     const int iMax0 = keys.size();
     const int iMax1 = datal.size();
 
-    if(iMax0 != iMax1)
+    if(iMax0 != iMax1 && verboseMode)
         qDebug() << "SharedMemoWriter::appendShmemData iMax0 != iMax1" << iMax0 << iMax1 << shmem.key();
 
     for(int i = 0; i < iMax0 && i < iMax1; i++)

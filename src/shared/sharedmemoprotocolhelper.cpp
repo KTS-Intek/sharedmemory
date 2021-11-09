@@ -42,26 +42,26 @@ QVariantHash SharedMemoProtocolHelper::readFromSharedMemory(const qint8 &mtdExtN
     return (!sharedMemoKey.isEmpty() && !semaName.isEmpty()) ? SharedMemoHelper::readFromSharedMemory(sharedMemoKey, semaName) : QVariantHash();
 }
 //-----------------------------------------------------------------------------------------
-QVariantList SharedMemoProtocolHelper::readFromSharedMemoryFFledListFormat(const qint8 &mtdExtNameIndx)
+QVariantList SharedMemoProtocolHelper::readFromSharedMemoryFFledListFormat(const qint8 &mtdExtNameIndx, const bool &verboseMode)
 {
     QString sharedMemoKey("");
     QString semaName = SharedMemoProtocolHelper::getSemaNameAndSharedMemoryName(mtdExtNameIndx, sharedMemoKey);
-    return (!sharedMemoKey.isEmpty() && !semaName.isEmpty()) ? SharedMemoHelper::readFromSharedMemoryFFledListFormat(sharedMemoKey, semaName) : QVariantList();
+    return (!sharedMemoKey.isEmpty() && !semaName.isEmpty()) ? SharedMemoHelper::readFromSharedMemoryFFledListFormat(sharedMemoKey, semaName, verboseMode) : QVariantList();
 }
 //-----------------------------------------------------------------------------------------
-QVariantList SharedMemoProtocolHelper::readFromSharedMemoryFFtaskFormat(const qint8 &mtdExtNameIndx)
+QVariantList SharedMemoProtocolHelper::readFromSharedMemoryFFtaskFormat(const qint8 &mtdExtNameIndx, const bool &verboseMode)
 {
     QString sharedMemoKey("");
     QString semaName = SharedMemoProtocolHelper::getSemaNameAndSharedMemoryName(mtdExtNameIndx, sharedMemoKey);
-    return (!sharedMemoKey.isEmpty() && !semaName.isEmpty()) ? SharedMemoHelper::readFromSharedMemoryFFtaskFormat(sharedMemoKey, semaName) : QVariantList();
+    return (!sharedMemoKey.isEmpty() && !semaName.isEmpty()) ? SharedMemoHelper::readFromSharedMemoryFFtaskFormat(sharedMemoKey, semaName, verboseMode) : QVariantList();
 }
 //-----------------------------------------------------------------------------------------
-QVariantList SharedMemoProtocolHelper::readFromSharedMemoryFFscheduleFormat(const qint8 &mtdExtNameIndx)
+QVariantList SharedMemoProtocolHelper::readFromSharedMemoryFFscheduleFormat(const qint8 &mtdExtNameIndx, const bool &verboseMode)
 {
     QString sharedMemoKey("");
     QString semaName = SharedMemoProtocolHelper::getSemaNameAndSharedMemoryName(mtdExtNameIndx, sharedMemoKey);
 
-    return (!sharedMemoKey.isEmpty() && !semaName.isEmpty()) ? SharedMemoHelper::readFromSharedMemoryFFscheduleFormat(sharedMemoKey, semaName) : QVariantList();
+    return (!sharedMemoKey.isEmpty() && !semaName.isEmpty()) ? SharedMemoHelper::readFromSharedMemoryFFscheduleFormat(sharedMemoKey, semaName, verboseMode) : QVariantList();
 
 }
 //-----------------------------------------------------------------------------------------

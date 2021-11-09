@@ -14,11 +14,11 @@ public:
 
     static QVariantHash readFromSharedMemory(const qint8 &mtdExtNameIndx);
 
-    static QVariantList readFromSharedMemoryFFledListFormat(const qint8 &mtdExtNameIndx);
+    static QVariantList readFromSharedMemoryFFledListFormat(const qint8 &mtdExtNameIndx, const bool &verboseMode);
 
-    static QVariantList readFromSharedMemoryFFtaskFormat(const qint8 &mtdExtNameIndx);
+    static QVariantList readFromSharedMemoryFFtaskFormat(const qint8 &mtdExtNameIndx, const bool &verboseMode);
 
-    static QVariantList readFromSharedMemoryFFscheduleFormat(const qint8 &mtdExtNameIndx);
+    static QVariantList readFromSharedMemoryFFscheduleFormat(const qint8 &mtdExtNameIndx, const bool &verboseMode);
 
 
 

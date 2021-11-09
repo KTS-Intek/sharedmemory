@@ -161,7 +161,7 @@ QVariantHash SharedMemoHelper::readFromSharedMemory(const QString &sharedMemoKey
 
 //---------------------------------------------------------------------------------
 
-SharedMemoHelper::LastFireflyStateStrct SharedMemoHelper::getFromSharedMemoryFFledStatuses(const QString &sharedMemoKey, const QString &semaName)
+SharedMemoHelper::LastFireflyStateStrct SharedMemoHelper::getFromSharedMemoryFFledStatuses(const QString &sharedMemoKey, const QString &semaName, const bool &verboseMode)
 {
     LastFireflyStateStrct rez;
     QByteArray bufArrCompressed;
@@ -186,20 +186,16 @@ SharedMemoHelper::LastFireflyStateStrct SharedMemoHelper::getFromSharedMemoryFFl
     sema.release();
 
     if(!r){
-#ifndef HASGUI4USR
-
-        qDebug() << "can't attach error = " << memory.errorString()<< memory.key();
-#endif
+        if(verboseMode)
+            qDebug() << "can't attach error = " << memory.errorString()<< memory.key();
         return rez;
     }
 
     if(!bufArrCompressed.isEmpty()){
         bufArrCompressed = qUncompress(bufArrCompressed);
-#ifndef HASGUI4USR
 
-        if(bufArrCompressed.isEmpty())
+        if(bufArrCompressed.isEmpty() && verboseMode)
             qDebug() << "uncompresss error ";
-#endif
     }
 
 
@@ -235,11 +231,11 @@ SharedMemoHelper::LastFireflyStateStrct SharedMemoHelper::getFromSharedMemoryFFl
 
 //---------------------------------------------------------------------------------
 
-QVariantList SharedMemoHelper::readFromSharedMemoryFFledListFormat(const QString &sharedMemoKey, const QString &semaName)
+QVariantList SharedMemoHelper::readFromSharedMemoryFFledListFormat(const QString &sharedMemoKey, const QString &semaName, const bool &verboseMode)
 {
     QVariantList list;
 
-    const SharedMemoHelper::LastFireflyStateStrct indata = getFromSharedMemoryFFledStatuses(sharedMemoKey, semaName);
+    const SharedMemoHelper::LastFireflyStateStrct indata = getFromSharedMemoryFFledStatuses(sharedMemoKey, semaName, verboseMode);
     for(int i = 0, iMax = indata.listNi.size(); i < iMax; i++){
         const QHash<QString,QString> h = indata.hashNi2conf.value(indata.listNi.at(i));
         const QList<QString> lk = h.keys();
@@ -255,7 +251,7 @@ QVariantList SharedMemoHelper::readFromSharedMemoryFFledListFormat(const QString
 
 //---------------------------------------------------------------------------------
 
-QVariantList SharedMemoHelper::readFromSharedMemoryFFtaskFormat(const QString &sharedMemoKey, const QString &semaName)
+QVariantList SharedMemoHelper::readFromSharedMemoryFFtaskFormat(const QString &sharedMemoKey, const QString &semaName, const bool &verboseMode)
 {
     QVariantList list;
 
@@ -290,10 +286,8 @@ QVariantList SharedMemoHelper::readFromSharedMemoryFFtaskFormat(const QString &s
 
 
     }else{
-#ifndef HASGUI4USR
-
-        qDebug() << "can't attach error = " << memory.errorString()<< memory.key();
-#endif
+        if(verboseMode)
+            qDebug() << "can't attach error = " << memory.errorString()<< memory.key();
         memory.detach();
     }
     sema.release();
@@ -302,7 +296,7 @@ QVariantList SharedMemoHelper::readFromSharedMemoryFFtaskFormat(const QString &s
 
 //---------------------------------------------------------------------------------
 
-QVariantList SharedMemoHelper::readFromSharedMemoryFFscheduleFormat(const QString &sharedMemoKey, const QString &semaName)
+QVariantList SharedMemoHelper::readFromSharedMemoryFFscheduleFormat(const QString &sharedMemoKey, const QString &semaName, const bool &verboseMode)
 {
     QVariantList list;
     QSharedMemory memory(sharedMemoKey);
@@ -331,10 +325,8 @@ QVariantList SharedMemoHelper::readFromSharedMemoryFFscheduleFormat(const QStrin
             list.append(vh);
         }
     }else{
-#ifndef HASGUI4USR
-
-        qDebug() << "can't attach error = " << memory.errorString()<< memory.key();
-#endif
+        if(verboseMode)
+            qDebug() << "can't attach error = " << memory.errorString()<< memory.key();
         memory.detach();
     }
     sema.release();
