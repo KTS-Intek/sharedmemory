@@ -438,6 +438,16 @@ QString SharedMemoHelper::defSvahaServerMemoName()      { return QString("%1/sva
 
 QString SharedMemoHelper::defSvahaServerSemaName()      { return QString("%1/svaha-bbb").arg(defSemaName())               ; }
 
+QString SharedMemoHelper::defHttpServerMemoName()
+{
+    return QString("%1/httpserver").arg(defSharedMemoName())                     ;
+}
+
+QString SharedMemoHelper::defHttpServerSemaName()
+{
+    return QString("%1/httpserver").arg(defSemaName())               ;
+}
+
 
 ///led lamp
 QString SharedMemoHelper::defFireflyLedListMemoName()   { return QString("%1/fireflyList").arg(defSharedMemoName())    ; }//it will be a lamp status
@@ -555,7 +565,8 @@ QStringList SharedMemoHelper::getSemaList()
                             defSqliteMediumEventsSemaName()     <<
                             defDataHolderSemaName()             <<
                             defModbusBBBLosSemaName()           <<
-                            defModbusBBBServicesStateSemaName()
+                            defModbusBBBServicesStateSemaName() <<
+                            defHttpServerSemaName()
                             ;
 }
 

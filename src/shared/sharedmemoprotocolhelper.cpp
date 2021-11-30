@@ -30,6 +30,8 @@ QString SharedMemoProtocolHelper::getSemaNameAndSharedMemoryName(const qint8 &mt
     case MTD_EXT_NAME_SVAHA_SERVICE         : sharedMemoKey = SharedMemoHelper::defSvahaServerMemoName()    ; semaName = SharedMemoHelper::defSvahaServerSemaName()           ; break;
     case MTD_EXT_NAME_RELAY_STATE           : sharedMemoKey = SharedMemoHelper::defElMeterRelayStateMemoName(); semaName = SharedMemoHelper::defElMeterRelayStateSemaName()   ; break;
 
+    case MTD_EXT_NAME_HTTP_SERVICE          : sharedMemoKey = SharedMemoHelper::defHttpServerMemoName()    ; semaName = SharedMemoHelper::defHttpServerSemaName()           ; break;
+
     default: /*qDebug() << "LocalSocket::readFromSharedMemory unknown index = " << mtdExtNameIndx ;*/ break;
     }
     return semaName;
