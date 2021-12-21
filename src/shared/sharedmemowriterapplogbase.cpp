@@ -1,5 +1,8 @@
 #include "sharedmemowriterapplogbase.h"
 
+
+#include <QDebug>
+
 SharedMemoWriterAppLogBase::SharedMemoWriterAppLogBase(const QString &sharedMemoName, const QString &semaName, const QString &write2fileName,
                                                        const int &delay, const int &delay2fileMsec, const bool &verboseMode, QObject *parent) :
     SharedMemoWriter(sharedMemoName, semaName, write2fileName, delay, delay2fileMsec, verboseMode, parent)
@@ -54,6 +57,6 @@ void SharedMemoWriterAppLogBase::appendLogDataSmart(const QString &key, const QS
 {
     appendLogData(key, log, "\n", 500);
     if(verboseMode)
-        qDebug() << key << log;
+        qDebug() << "appendLogDataSmart " << key << log;
 
 }

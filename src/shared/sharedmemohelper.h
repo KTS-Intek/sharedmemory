@@ -134,6 +134,11 @@ public:
 
     static QString defHttpServerSemaName();
 
+    static QString defHttpServicesStateMemoName();
+
+    static QString defHttpServicesStateSemaName();
+
+
 
     ///led lamp
     static QString defFireflyLedListMemoName();

@@ -14,6 +14,8 @@ class ConnectionTableInSharedMemory : public SharedMemoWriter
 public:
     explicit ConnectionTableInSharedMemory(const QString &sharedMemoName, const QString &semaName, const int &delay, const bool &verboseMode, QObject *parent = nullptr);
 
+    bool doNotAllo2writeEmptyLastMessage;
+
     ~ConnectionTableInSharedMemory();
 
 

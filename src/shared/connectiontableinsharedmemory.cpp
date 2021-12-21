@@ -1,9 +1,11 @@
 #include "connectiontableinsharedmemory.h"
+#include <QDebug>
+
 
 ConnectionTableInSharedMemory::ConnectionTableInSharedMemory(const QString &sharedMemoName, const QString &semaName, const int &delay, const bool &verboseMode, QObject *parent)
     :  SharedMemoWriter(sharedMemoName, semaName, "", delay, 999999, verboseMode, parent)
 {
-
+    doNotAllo2writeEmptyLastMessage = true;
 }
 
 //--------------------------------------------------------------------------------------------------------------
@@ -60,7 +62,16 @@ void ConnectionTableInSharedMemory::setServerInConnIdExtData(QString conntype, Q
     oneconnection.insert("end", msecend);//if it is still alive must be 0
     oneconnection.insert("rb", rb);
     oneconnection.insert("wb", wb);
-    oneconnection.insert("etc", lastmessage);
+    if(doNotAllo2writeEmptyLastMessage && lastmessage.isEmpty()){
+        if(verboseMode)
+            qDebug() << "ConnectionTableInSharedMemory::setServerInConnIdExtData it tries to write empty last message"<< msecend << conntype <<  connid<< msecend << conntype <<  connid ;
+        //keep old last message if it is
+    }else{
+        oneconnection.insert("etc", lastmessage);
+    }
+
+    if(verboseMode)
+        qDebug() << "ConnectionTableInSharedMemory::setServerInConnIdExtData " << msecend << conntype <<  connid << oneconnection;
 
     if(msecend == 0){ //the connection is still alive, keep it in the memory
         oneconntype.insert(connid, oneconnection);

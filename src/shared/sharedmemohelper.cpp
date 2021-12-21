@@ -448,6 +448,19 @@ QString SharedMemoHelper::defHttpServerSemaName()
     return QString("%1/httpserver").arg(defSemaName())               ;
 }
 
+QString SharedMemoHelper::defHttpServicesStateMemoName()
+{
+    return QString("%1/httpservicesstate").arg(defSharedMemoName())   ;
+
+}
+
+QString SharedMemoHelper::defHttpServicesStateSemaName()
+{
+    return QString("%1/httpservicesstate").arg(defSemaName())         ;
+
+
+}
+
 
 ///led lamp
 QString SharedMemoHelper::defFireflyLedListMemoName()   { return QString("%1/fireflyList").arg(defSharedMemoName())    ; }//it will be a lamp status
@@ -566,7 +579,8 @@ QStringList SharedMemoHelper::getSemaList()
                             defDataHolderSemaName()             <<
                             defModbusBBBLosSemaName()           <<
                             defModbusBBBServicesStateSemaName() <<
-                            defHttpServerSemaName()
+                            defHttpServerSemaName()             <<
+                            defHttpServicesStateSemaName()
                             ;
 }
 
