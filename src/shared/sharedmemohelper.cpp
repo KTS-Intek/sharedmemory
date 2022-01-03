@@ -438,6 +438,16 @@ QString SharedMemoHelper::defSvahaServerMemoName()      { return QString("%1/sva
 
 QString SharedMemoHelper::defSvahaServerSemaName()      { return QString("%1/svaha-bbb").arg(defSemaName())               ; }
 
+QString SharedMemoHelper::defM2MServerAppMemoName()
+{
+    return QString("%1/m2mlogsbbb").arg(defSharedMemoName())                     ;
+}
+
+QString SharedMemoHelper::defM2MServerAppSemaName()
+{
+    return QString("%1/m2mlogsbbb").arg(defSemaName())               ;
+}
+
 QString SharedMemoHelper::defHttpServerMemoName()
 {
     return QString("%1/httpserver").arg(defSharedMemoName())                     ;
@@ -580,7 +590,8 @@ QStringList SharedMemoHelper::getSemaList()
                             defModbusBBBLosSemaName()           <<
                             defModbusBBBServicesStateSemaName() <<
                             defHttpServerSemaName()             <<
-                            defHttpServicesStateSemaName()
+                            defHttpServicesStateSemaName()      <<
+                            defM2MServerAppSemaName()
                             ;
 }
 

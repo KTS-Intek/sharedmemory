@@ -13,8 +13,13 @@ SharedMemoWriterAppLogBase::SharedMemoWriterAppLogBase(const QString &sharedMemo
 
 QStringList SharedMemoWriterAppLogBase::getLines(const QString &s)
 {
+    return getLinesExt(QDateTime::currentMSecsSinceEpoch(), s);
+}
+
+QStringList SharedMemoWriterAppLogBase::getLinesExt(const qint64 &msec, const QString &s)
+{
     return QString("%1 %2")
-            .arg(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss.zzz"), s).split("\n");
+            .arg(QDateTime::fromMSecsSinceEpoch(msec).toLocalTime().toString("yyyy/MM/dd hh:mm:ss.zzz"), s).split("\n");
 }
 
 
@@ -26,13 +31,26 @@ void SharedMemoWriterAppLogBase::add2systemLogError(QString err)
 void SharedMemoWriterAppLogBase::add2systemLogWarn(QString warn)
 {
     add2systemLogWarnList(getLines(warn));
-
 }
 
 void SharedMemoWriterAppLogBase::add2systemLogEvent(QString evnt)
 {
     add2systemLogEventList(getLines(evnt));
+}
 
+void SharedMemoWriterAppLogBase::add2systemLogErrorExt(qint64 msec, QString err)
+{
+    add2systemLogErrorList(getLinesExt(msec, err));
+}
+
+void SharedMemoWriterAppLogBase::add2systemLogWarnExt(qint64 msec, QString warn)
+{
+    add2systemLogWarnList(getLinesExt(msec, warn));
+}
+
+void SharedMemoWriterAppLogBase::add2systemLogEventExt(qint64 msec, QString evnt)
+{
+    add2systemLogEventList(getLinesExt(msec, evnt));
 }
 
 void SharedMemoWriterAppLogBase::add2systemLogErrorList(QStringList list)
@@ -51,6 +69,7 @@ void SharedMemoWriterAppLogBase::add2systemLogEventList(QStringList list)
     appendLogDataSmart(myLogKeys.logEvnt, list);
 
 }
+
 
 
 void SharedMemoWriterAppLogBase::appendLogDataSmart(const QString &key, const QStringList &log)

@@ -129,6 +129,10 @@ public:
 
     static QString defSvahaServerSemaName();
 
+    static QString defM2MServerAppMemoName();
+
+    static QString defM2MServerAppSemaName();
+
 
     static QString defHttpServerMemoName();
 

@@ -24,6 +24,9 @@ public:
 
     QStringList getLines(const QString &s);
 
+    QStringList getLinesExt(const qint64 &msec, const QString &s);
+
+
 
 
 
@@ -36,12 +39,19 @@ public slots:
 
     void add2systemLogEvent(QString evnt);
 
+    void add2systemLogErrorExt(qint64 msec, QString err);
+
+    void add2systemLogWarnExt(qint64 msec, QString warn);
+
+    void add2systemLogEventExt(qint64 msec, QString evnt);
+
 
     void add2systemLogErrorList(QStringList list);
 
     void add2systemLogWarnList(QStringList list);
 
     void add2systemLogEventList(QStringList list);
+
 
 
     void appendLogDataSmart(const QString &key, const QStringList &log);
