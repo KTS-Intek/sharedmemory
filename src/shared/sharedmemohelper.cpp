@@ -680,6 +680,18 @@ QString SharedMemoHelper::defDataHolderSemaName()
 
 }
 
+QString SharedMemoHelper::defDataHolderAppLogMemoName()
+{
+    return QString("%1/dataholderapplog").arg(defSharedMemoName())        ;
+
+}
+
+QString SharedMemoHelper::defDataHolderAppLogSemaName()
+{
+    return QString("%1/dataholderapplog").arg(defSemaName())     ;
+
+}
+
 QString SharedMemoHelper::defModbusBBBLosMemoName()
 {
     return QString("%1/modbusbbb").arg(defSharedMemoName())        ;

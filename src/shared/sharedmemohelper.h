@@ -257,6 +257,12 @@ public:
 
     static QString defDataHolderSemaName();
 
+    static QString defDataHolderAppLogMemoName();
+
+    static QString defDataHolderAppLogSemaName();
+
+
+
     //modbus-bbb
     static QString defModbusBBBLosMemoName();
 

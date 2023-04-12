@@ -17,12 +17,12 @@ public:
 
     struct CounterMaximums
     {
-        quint8 write2ram;
-        quint8 write2file;
+        quint16 write2ram;
+        quint16 write2file;
         CounterMaximums() : write2ram(60), write2file(120) {}
     } mymaximums;
 
-    quint8 counter, counter2file;
+    quint16 counter, counter2file;
 
     bool checkResetCounter();
 

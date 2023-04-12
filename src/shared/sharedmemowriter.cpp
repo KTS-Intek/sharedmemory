@@ -61,7 +61,13 @@ QStringList SharedMemoWriter::getDataByKey(const QString &key, const QString &sp
 {
     return useMirrorLogs ?
                 hashMirrorLogs.value(key) :
-                hashMirror.value(key).toString().split(splitter, QString::SkipEmptyParts);
+                hashMirror.value(key).toString().split(splitter,
+                                                   #if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
+                                                       Qt::SkipEmptyParts
+                                                   #else
+                                                       QString::SkipEmptyParts
+                                                   #endif
+                                                       );
 }
 
 QVariantHash SharedMemoWriter::getCurrentMirror()
