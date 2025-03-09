@@ -27,7 +27,7 @@ QString SharedMemoProtocolHelper::getSemaNameAndSharedMemoryName(const qint8 &mt
     case MTD_EXT_NAME_FIREFLY_STATUS        : sharedMemoKey = SharedMemoHelper::defFireflyStatusMemoName()  ; semaName = SharedMemoHelper::defFireflyStatusSemaName()         ; break;
 
     case MTD_EXT_NAME_SNTP_SERVICE          : sharedMemoKey = SharedMemoHelper::defSntpServerMemoName()     ; semaName = SharedMemoHelper::defSntpServerSemaName()            ; break;
-    case MTD_EXT_NAME_SVAHA_SERVICE         : sharedMemoKey = SharedMemoHelper::defSvahaServerMemoName()    ; semaName = SharedMemoHelper::defSvahaServerSemaName()           ; break;
+    case MTD_EXT_NAME_M2M_SERVICE         : sharedMemoKey = SharedMemoHelper::defSvahaServerMemoName()    ; semaName = SharedMemoHelper::defSvahaServerSemaName()           ; break;
     case MTD_EXT_NAME_RELAY_STATE           : sharedMemoKey = SharedMemoHelper::defElMeterRelayStateMemoName(); semaName = SharedMemoHelper::defElMeterRelayStateSemaName()   ; break;
 
     case MTD_EXT_NAME_HTTP_SERVICE          : sharedMemoKey = SharedMemoHelper::defHttpServerMemoName()    ; semaName = SharedMemoHelper::defHttpServerSemaName()           ; break;

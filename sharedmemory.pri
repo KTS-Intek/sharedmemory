@@ -5,7 +5,7 @@
 #
 
 INCLUDEPATH  += $$PWD\
-                $$PWD/../../defines/defines
+                $$PWD/../../defines/defines\
                 $$PWD/../../defines/define-types
 
 
